@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\R5T.Magyar\source\R5T.Magyar\R5T.Magyar.csproj" />
     <ProjectReference Include="..\R5T.Gepidia.Local\R5T.Gepidia.Local.csproj" />
   </ItemGroup>
 

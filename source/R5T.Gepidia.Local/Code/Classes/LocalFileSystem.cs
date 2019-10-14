@@ -84,6 +84,11 @@ namespace R5T.Gepidia.Local
             Directory.CreateDirectory(directoryPath); // Idempotent. No exception thrown.
         }
 
+        public static void CreateDirectoryOnlyIfNotExists(string directoryPath)
+        {
+            LocalFileSystem.CreateDirectory(directoryPath);
+        }
+
         public static Stream CreateFile(string filePath, bool overwrite = true)
         {
             LocalFileSystem.CheckOverwrite(filePath, overwrite);
@@ -94,12 +99,27 @@ namespace R5T.Gepidia.Local
 
         public static void DeleteDirectory(string directoryPath, bool recursive = true)
         {
-            Directory.Delete(directoryPath, recursive);
+            if(!Directory.Exists(directoryPath))
+            {
+                return;
+            }
+
+            Directory.Delete(directoryPath, recursive); // Not idempotent.
+        }
+
+        public static void DeleteDirectoryOnlyIfExists(string directoryPath, bool recursive = true)
+        {
+            LocalFileSystem.DeleteDirectory(directoryPath, recursive); // Idempotent, ok.
         }
 
         public static void DeleteFile(string filePath)
         {
-            File.Delete(filePath);
+            File.Delete(filePath); // Idempotent, ok.
+        }
+
+        public static void DeleteFileOnlyIfExists(string filePath)
+        {
+            File.Delete(filePath); // Idempotent, ok.
         }
 
         public static IEnumerable<string> EnumerateFileSystemEntries(string directoryPath, bool recursive = false)

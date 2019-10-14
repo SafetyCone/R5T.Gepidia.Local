@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\R5T.Gepidia.Test\source\R5T.Gepidia.Test\R5T.Gepidia.Test.csproj" />
+    <ProjectReference Include="..\..\..\R5T.Lombardy\source\R5T.Lombardy\R5T.Lombardy.csproj" />
     <ProjectReference Include="..\R5T.Gepidia.Local\R5T.Gepidia.Local.csproj" />
   </ItemGroup>
 
