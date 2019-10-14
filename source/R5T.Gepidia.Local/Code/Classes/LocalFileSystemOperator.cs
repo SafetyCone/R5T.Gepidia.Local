@@ -109,9 +109,9 @@ namespace R5T.Gepidia.Local
             return output;
         }
 
-        public void MoveDirectory(string sourceDirectoryPath, string destinationFilePath)
+        public void MoveDirectory(string sourceDirectoryPath, string destinationDirectoryPath)
         {
-            LocalFileSystem.MoveDirectory(sourceDirectoryPath, destinationFilePath);
+            LocalFileSystem.MoveDirectory(sourceDirectoryPath, destinationDirectoryPath);
         }
 
         public void MoveFile(string sourceFilePath, string destinationFilePath, bool overwrite = true)

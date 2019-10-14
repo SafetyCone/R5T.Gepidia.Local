@@ -166,9 +166,9 @@ namespace R5T.Gepidia.Local
             return output;
         }
 
-        public static void MoveDirectory(string sourceDirectoryPath, string destinationFilePath)
+        public static void MoveDirectory(string sourceDirectoryPath, string destinationDirectoryPath)
         {
-            Directory.Move(sourceDirectoryPath, destinationFilePath);
+            Directory.Move(sourceDirectoryPath, destinationDirectoryPath);
         }
 
         public static void MoveFile(string sourceFilePath, string destinationFilePath, bool overwrite = true)
