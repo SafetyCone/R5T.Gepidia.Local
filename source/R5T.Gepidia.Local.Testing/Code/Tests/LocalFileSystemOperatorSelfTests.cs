@@ -4,9 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using R5T.Gepidia.Test;
 using R5T.Lombardy;
-using R5T.Magyar;
-
-using GepidiaTestUtilities = R5T.Gepidia.Test.Utilities;
 
 
 namespace R5T.Gepidia.Local.Testing
@@ -18,7 +15,7 @@ namespace R5T.Gepidia.Local.Testing
 
         private static LocalFileSystemOperator LocalFileSystemOperator { get; } = new LocalFileSystemOperator();
         private static StringlyTypedPathOperator LocalStringlyTypedPathOperator { get; } = new StringlyTypedPathOperator();
-        private static string LocalRootDirectoryPath { get; } = GepidiaTestUtilities.GetTestingRootDirectoryPath(LocalFileSystemOperatorSelfTests.LocalStringlyTypedPathOperator);
+        private static string LocalRootDirectoryPath { get; } = Utilities.GetLocalTestingRootDirectoryPath(LocalFileSystemOperatorSelfTests.LocalStringlyTypedPathOperator);
 
         #endregion
 
