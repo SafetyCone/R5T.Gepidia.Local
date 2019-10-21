@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 
-using R5T.Magyar;
-
 
 namespace R5T.Gepidia.Local
 {
@@ -67,7 +65,13 @@ namespace R5T.Gepidia.Local
             return output;
         }
 
-        public IEnumerable<string> EnumerateFileSystemEntries(string directoryPath, bool recursive = false)
+        public IEnumerable<string> EnumerateFileSystemEntryPaths(string directoryPath, bool recursive = false)
+        {
+            var output = LocalFileSystem.EnumerateFileSystemEntryPaths(directoryPath, recursive);
+            return output;
+        }
+
+        public IEnumerable<FileSystemEntry> EnumerateFileSystemEntries(string directoryPath, bool recursive = false)
         {
             var output = LocalFileSystem.EnumerateFileSystemEntries(directoryPath, recursive);
             return output;
@@ -82,6 +86,12 @@ namespace R5T.Gepidia.Local
         public bool ExistsFile(string filePath)
         {
             var output = LocalFileSystem.ExistsFile(filePath);
+            return output;
+        }
+
+        public FileSystemEntryType GetFileSystemEntryType(string path)
+        {
+            var output = LocalFileSystem.GetFileSystemEntryType(path);
             return output;
         }
 

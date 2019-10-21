@@ -122,12 +122,27 @@ namespace R5T.Gepidia.Local
             File.Delete(filePath); // Idempotent, ok.
         }
 
-        public static IEnumerable<string> EnumerateFileSystemEntries(string directoryPath, bool recursive = false)
+        public static IEnumerable<string> EnumerateFileSystemEntryPaths(string directoryPath, bool recursive = false)
         {
             var searchOption = SearchOptionHelper.RecursiveToSearchOption(recursive);
 
             var output = Directory.EnumerateFileSystemEntries(directoryPath, SearchPatternHelper.All, searchOption);
             return output;
+        }
+
+        public static IEnumerable<FileSystemEntry> EnumerateFileSystemEntries(string directoryPath, bool recursive = false)
+        {
+            var searchOption = SearchOptionHelper.RecursiveToSearchOption(recursive);
+
+            // Ok to query the local file system multiple times, should be quick enough.
+            var fileSystemEntryPaths = LocalFileSystem.EnumerateFileSystemEntryPaths(directoryPath, recursive);
+            foreach (var path in fileSystemEntryPaths)
+            {
+                var type = LocalFileSystem.GetFileSystemEntryType(path);
+
+                var entry = FileSystemEntry.New(path, type);
+                yield return entry;
+            }
         }
 
         public static IEnumerable<string> EnumerateDirectories(string directoryPath)
@@ -152,6 +167,41 @@ namespace R5T.Gepidia.Local
         {
             var output = File.Exists(filePath);
             return output;
+        }
+
+        /// <summary>
+        /// Determines if a directory exists at the location specified by the path.
+        /// Directory must exist, and the location must be a directory (not a file with the same path).
+        /// To determine if a path itself is *directory indicated*, use a stringly-typed path operator.
+        /// </summary>
+        public static bool IsDirectory(string path)
+        {
+            var output = Directory.Exists(path); // Ask if the directory exists. The key is that if a file exists at the path, then a directory does not.
+            return output;
+        }
+
+        /// <summary>
+        /// Determines if a file exists at the location specified by the path.
+        /// File must exist, and the location must be a file (not a directory with the same path).
+        /// To determine if a path itself is *file indicated*, use a stringly-typed path operator.
+        /// </summary>
+        public static bool IsFile(string path)
+        {
+            var output = File.Exists(path); // Ask if the file exists. The key is that if a directory exists at the path, then a file does not.
+            return output;
+        }
+
+        public static FileSystemEntryType GetFileSystemEntryType(string path)
+        {
+            var isDirectory = LocalFileSystem.IsDirectory(path);
+            if(isDirectory)
+            {
+                return FileSystemEntryType.Directory;
+            }
+            else
+            {
+                return FileSystemEntryType.File;
+            }
         }
 
         public static DateTime GetDirectoryLastModifiedTimeUTC(string path)
