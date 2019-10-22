@@ -139,8 +139,9 @@ namespace R5T.Gepidia.Local
             foreach (var path in fileSystemEntryPaths)
             {
                 var type = LocalFileSystem.GetFileSystemEntryType(path);
+                var lastModifiedUTC = LocalFileSystem.GetFileLastModifiedTimeUTC(path);
 
-                var entry = FileSystemEntry.New(path, type);
+                var entry = FileSystemEntry.New(path, type, lastModifiedUTC);
                 yield return entry;
             }
         }
@@ -214,6 +215,21 @@ namespace R5T.Gepidia.Local
         {
             var output = File.GetLastWriteTimeUtc(path);
             return output;
+        }
+
+        public static DateTime GetFileLastModifiedTime(string path)
+        {
+            var isDirectory = LocalFileSystem.IsDirectory(path);
+            if(isDirectory)
+            {
+                var output = LocalFileSystem.GetDirectoryLastModifiedTimeUTC(path);
+                return output;
+            }
+            else
+            {
+                var output = LocalFileSystem.GetFileLastModifiedTimeUTC(path);
+                return output;
+            }
         }
 
         public static void MoveDirectory(string sourceDirectoryPath, string destinationDirectoryPath)
