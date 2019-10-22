@@ -9,6 +9,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\R5T.Gepidia.Base\source\R5T.Gepidia.Base\R5T.Gepidia.Base.csproj" />
+    <ProjectReference Include="..\..\..\R5T.Lombardy.Base\source\R5T.Lombardy.Base\R5T.Lombardy.Base.csproj" />
+    <ProjectReference Include="..\..\..\R5T.Lombardy.Gepidia\source\R5T.Lombardy.Gepidia\R5T.Lombardy.Gepidia.csproj" />
     <ProjectReference Include="..\..\..\R5T.Magyar\source\R5T.Magyar\R5T.Magyar.csproj" />
   </ItemGroup>
 </Project>
