@@ -2,11 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 
+using R5T.Lombardy;
+
 
 namespace R5T.Gepidia.Local
 {
     public class LocalFileSystemOperator : IFileSystemOperator
     {
+        private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
+
+
+        public LocalFileSystemOperator(IStringlyTypedPathOperator stringlyTypedPathOperator)
+        {
+            this.StringlyTypedPathOperator = stringlyTypedPathOperator;
+        }
+
         public void ChangePermissions(string path, short mode)
         {
             LocalFileSystem.ChangePermissions(path, mode);
@@ -67,13 +77,13 @@ namespace R5T.Gepidia.Local
 
         public IEnumerable<string> EnumerateFileSystemEntryPaths(string directoryPath, bool recursive = false)
         {
-            var output = LocalFileSystem.EnumerateFileSystemEntryPaths(directoryPath, recursive);
+            var output = LocalFileSystem.EnumerateFileSystemEntryPaths(this.StringlyTypedPathOperator, directoryPath, recursive);
             return output;
         }
 
         public IEnumerable<FileSystemEntry> EnumerateFileSystemEntries(string directoryPath, bool recursive = false)
         {
-            var output = LocalFileSystem.EnumerateFileSystemEntries(directoryPath, recursive);
+            var output = LocalFileSystem.EnumerateFileSystemEntries(this.StringlyTypedPathOperator, directoryPath, recursive);
             return output;
         }
 

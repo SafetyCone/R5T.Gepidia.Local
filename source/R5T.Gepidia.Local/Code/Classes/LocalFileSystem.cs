@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+using R5T.Lombardy;
+using R5T.Lombardy.Gepidia.Extensions;
 using R5T.Magyar;
 
 
@@ -122,26 +124,70 @@ namespace R5T.Gepidia.Local
             File.Delete(filePath); // Idempotent, ok.
         }
 
-        public static IEnumerable<string> EnumerateFileSystemEntryPaths(string directoryPath, bool recursive = false)
+        /// <summary>
+        /// Uses <see cref="Directory.EnumerateFileSystemEntries(string, string, SearchOption)"/> to get directory file-system entries.
+        /// This method does not return directory-indicated directory paths.
+        /// </summary>
+        /// <remarks>
+        /// This method involves just one call to the file-system via the <see cref="Directory"/> API.
+        /// </remarks>
+        public static IEnumerable<string> EnumerateFileSystemEntryPathsSimple(string directoryPath, bool recursive = false)
         {
             var searchOption = SearchOptionHelper.RecursiveToSearchOption(recursive);
 
-            var output = Directory.EnumerateFileSystemEntries(directoryPath, SearchPatternHelper.All, searchOption);
-            return output;
+            var enumeratedPaths = Directory.EnumerateFileSystemEntries(directoryPath, SearchPatternHelper.All, searchOption);
+            return enumeratedPaths;
         }
 
-        public static IEnumerable<FileSystemEntry> EnumerateFileSystemEntries(string directoryPath, bool recursive = false)
+        /// <summary>
+        /// Produces paths where directory paths are directory-indicated, and file paths are file-indicated.
+        /// Returns all file-entries in sorted order.
+        /// </summary>
+        /// <remarks>
+        /// This method involves two calls to the file-system via <see cref="Directory.EnumerateDirectories(string, string, SearchOption)"/> and <see cref="Directory.EnumerateFiles(string, string, SearchOption)"/>.
+        /// </remarks>
+        public static IEnumerable<string> EnumerateFileSystemEntryPaths(IStringlyTypedPathOperator stringlyTypedPathOperator, string directoryPath, bool recursive = false)
         {
             var searchOption = SearchOptionHelper.RecursiveToSearchOption(recursive);
 
-            // Ok to query the local file system multiple times, should be quick enough.
-            var fileSystemEntryPaths = LocalFileSystem.EnumerateFileSystemEntryPaths(directoryPath, recursive);
-            foreach (var path in fileSystemEntryPaths)
-            {
-                var type = LocalFileSystem.GetFileSystemEntryType(path);
-                var lastModifiedUTC = LocalFileSystem.GetFileLastModifiedTimeUTC(path);
+            var subDirectoryPaths = Directory.EnumerateDirectories(directoryPath, SearchPatternHelper.All, SearchOption.AllDirectories);
+            var filePaths = Directory.EnumerateFiles(directoryPath, SearchPatternHelper.All, SearchOption.AllDirectories);
 
-                var entry = FileSystemEntry.New(path, type, lastModifiedUTC);
+            var allPaths = new List<string>();
+            foreach (var subDirectoryPath in subDirectoryPaths)
+            {
+                // Directory paths are NOT directory-indicated coming from the Directory.EnumerateDirectories() API.
+                var outputDirectoryPath = stringlyTypedPathOperator.EnsureDirectoryPathIsDirectoryIndicated(directoryPath);
+
+                allPaths.Add(outputDirectoryPath);
+            }
+
+            // File paths ARE file-indicated (not directory-indicated) from from the Directory.EnumerateFiles() API.
+            allPaths.AddRange(filePaths);
+
+            // Sort file paths to return them in order.
+            allPaths.Sort();
+
+            return allPaths;
+        }
+
+        /// <summary>
+        /// Produces paths where directory paths are directory-indicated, and file paths are file-indicated.
+        /// Returns all file-system entries in sorted order.
+        /// </summary>
+        /// <remarks>
+        /// This method involves two calls to the file-system via <see cref="LocalFileSystem.EnumerateFileSystemEntryPaths(IStringlyTypedPathOperator, string, bool)"/>, then for N directories and M files, N + M calls to the file-system to get the last-modified time for each entry.
+        /// The N + M calls to determine if the entry is a directory or file is avoided by relying on <see cref="LocalFileSystem.EnumerateFileSystemEntryPaths(IStringlyTypedPathOperator, string, bool)"/> to provided directory-indicated paths.
+        /// </remarks>
+        public static IEnumerable<FileSystemEntry> EnumerateFileSystemEntries(IStringlyTypedPathOperator stringlyTypedPathOperator, string directoryPath, bool recursive = false)
+        {
+            var fileSystemEntryPaths = LocalFileSystem.EnumerateFileSystemEntryPaths(stringlyTypedPathOperator, directoryPath, recursive);
+            foreach (var entryPath in fileSystemEntryPaths)
+            {
+                var entryType = stringlyTypedPathOperator.GetFileSystemEntryType(entryPath);
+                var lastModifiedUTC = LocalFileSystem.GetFileLastModifiedTimeUTC(entryPath); // Ok to query the local file system multiple times, should be quick enough.
+
+                var entry = FileSystemEntry.New(entryPath, entryType, lastModifiedUTC);
                 yield return entry;
             }
         }
