@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 using R5T.Lombardy;
 using R5T.Lombardy.Gepidia.Extensions;
@@ -148,6 +149,12 @@ namespace R5T.Gepidia.Local
         /// </remarks>
         public static IEnumerable<string> EnumerateFileSystemEntryPaths(IStringlyTypedPathOperator stringlyTypedPathOperator, string directoryPath, bool recursive = false)
         {
+            var directoryExists = stringlyTypedPathOperator.ExistsDirectoryPath(directoryPath);
+            if(!directoryExists)
+            {
+                return Enumerable.Empty<string>();
+            }
+
             var searchOption = SearchOptionHelper.RecursiveToSearchOption(recursive);
 
             var subDirectoryPaths = Directory.EnumerateDirectories(directoryPath, SearchPatternHelper.All, SearchOption.AllDirectories);
@@ -157,7 +164,7 @@ namespace R5T.Gepidia.Local
             foreach (var subDirectoryPath in subDirectoryPaths)
             {
                 // Directory paths are NOT directory-indicated coming from the Directory.EnumerateDirectories() API.
-                var outputDirectoryPath = stringlyTypedPathOperator.EnsureDirectoryPathIsDirectoryIndicated(directoryPath);
+                var outputDirectoryPath = stringlyTypedPathOperator.EnsureDirectoryPathIsDirectoryIndicated(subDirectoryPath);
 
                 allPaths.Add(outputDirectoryPath);
             }
