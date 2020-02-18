@@ -7,7 +7,7 @@ using R5T.Lombardy;
 
 namespace R5T.Gepidia.Local
 {
-    public class LocalFileSystemOperator : IFileSystemOperator
+    public class LocalFileSystemOperator : ILocalFileSystemOperator
     {
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 
@@ -102,18 +102,6 @@ namespace R5T.Gepidia.Local
         public FileSystemEntryType GetFileSystemEntryType(string path)
         {
             var output = LocalFileSystem.GetFileSystemEntryType(path);
-            return output;
-        }
-
-        public string GetCannotOverwriteFileExceptionMessage(string filePath)
-        {
-            var output = CommonFileSystem.GetCannotOverwriteFileExceptionMessage(filePath);
-            return output;
-        }
-
-        public IOException GetCannotOverwriteFileIOException(string filePath)
-        {
-            var output = CommonFileSystem.GetCannotOverwriteFileIOException(filePath);
             return output;
         }
 
