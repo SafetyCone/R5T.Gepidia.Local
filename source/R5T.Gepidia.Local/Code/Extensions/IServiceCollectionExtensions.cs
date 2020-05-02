@@ -27,6 +27,18 @@ namespace R5T.Gepidia.Local
         /// <summary>
         /// Adds the <see cref="LocalFileSystemOperator"/> implementation of <see cref="ILocalFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
         /// </summary>
+        public static IServiceCollection AddLocalFileSystemOperator<TLocalFileSystemOperator>(this IServiceCollection services,
+            ServiceAction<IStringlyTypedPathOperator> addStringlyTypedPathOperator)
+            where TLocalFileSystemOperator: ILocalFileSystemOperator
+        {
+            services.AddLocalFileSystemOperator(addStringlyTypedPathOperator);
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the <see cref="LocalFileSystemOperator"/> implementation of <see cref="ILocalFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
+        /// </summary>
         public static ServiceAction<ILocalFileSystemOperator> AddLocalFileSystemOperatorAction(this IServiceCollection services,
             ServiceAction<IStringlyTypedPathOperator> addStringlyTypedPathOperator)
         {
