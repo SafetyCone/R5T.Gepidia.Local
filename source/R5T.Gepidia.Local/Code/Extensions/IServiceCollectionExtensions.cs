@@ -13,12 +13,12 @@ namespace R5T.Gepidia.Local
         /// <summary>
         /// Adds the <see cref="LocalFileSystemOperator"/> implementation of <see cref="ILocalFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
         /// </summary>
-        public static IServiceCollection AddLocalFileSystemOperator(this IServiceCollection services,
-            ServiceAction<IStringlyTypedPathOperator> addStringlyTypedPathOperator)
+        public static IServiceCollection AddLocalFileSystemOperatorOnly(this IServiceCollection services,
+            IServiceAction<IStringlyTypedPathOperator> stringlyTypedPathOperatorAction)
         {
             services
                 .AddSingleton<ILocalFileSystemOperator, LocalFileSystemOperator>()
-                .RunServiceAction(addStringlyTypedPathOperator)
+                .Run(stringlyTypedPathOperatorAction)
                 ;
 
             return services;
@@ -27,72 +27,59 @@ namespace R5T.Gepidia.Local
         /// <summary>
         /// Adds the <see cref="LocalFileSystemOperator"/> implementation of <see cref="ILocalFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
         /// </summary>
-        public static IServiceCollection AddLocalFileSystemOperator<TLocalFileSystemOperator>(this IServiceCollection services,
-            ServiceAction<IStringlyTypedPathOperator> addStringlyTypedPathOperator)
-            where TLocalFileSystemOperator: ILocalFileSystemOperator
+        public static IServiceAction<ILocalFileSystemOperator> AddLocalFileSystemOperatorOnlyAction(this IServiceCollection services,
+            IServiceAction<IStringlyTypedPathOperator> stringlyTypedPathOperatorAction)
         {
-            services.AddLocalFileSystemOperator(addStringlyTypedPathOperator);
+            var serviceAction = ServiceAction.New<ILocalFileSystemOperator>(() => services.AddLocalFileSystemOperatorOnly(
+                stringlyTypedPathOperatorAction));
 
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the <see cref="LocalFileSystemOperator"/> implementation of <see cref="ILocalFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
-        /// </summary>
-        public static ServiceAction<ILocalFileSystemOperator> AddLocalFileSystemOperatorAction(this IServiceCollection services,
-            ServiceAction<IStringlyTypedPathOperator> addStringlyTypedPathOperator)
-        {
-            var serviceAction = new ServiceAction<ILocalFileSystemOperator>(() => services.AddLocalFileSystemOperator(
-                addStringlyTypedPathOperator));
             return serviceAction;
         }
 
         /// <summary>
-        /// Adds the <see cref="FileSystemOperator"/> implementation of <see cref="IFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
+        /// Adds the <see cref="ILocalFileSystemOperator"/> implementation of <see cref="IFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
         /// </summary>
-        public static IServiceCollection AddLocalBasedFileSystemOperator(this IServiceCollection services,
-            ServiceAction<ILocalFileSystemOperator> addLocalFileSystemOperator)
+        public static IServiceCollection AddFileSystemOperator(this IServiceCollection services,
+            IServiceAction<ILocalFileSystemOperator> localFileSystemOperatorAction)
         {
             services
-                .AddSingleton<IFileSystemOperator, FileSystemOperator>()
-                .RunServiceAction(addLocalFileSystemOperator)
+                .Run(localFileSystemOperatorAction)
+                .AddSingleton<IFileSystemOperator>(serviceProvider =>
+                {
+                    var localFileSystemOperator = serviceProvider.GetRequiredService<ILocalFileSystemOperator>();
+                    return localFileSystemOperator;
+                })
                 ;
 
             return services;
         }
 
         /// <summary>
-        /// Adds the <see cref="FileSystemOperator"/> implementation of <see cref="IFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
+        /// Forwards the <see cref="ILocalFileSystemOperator"/> implementation of <see cref="IFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
         /// </summary>
-        public static ServiceAction<IFileSystemOperator> AddLocalBasedFileSystemOperatorAction(this IServiceCollection services,
-            ServiceAction<ILocalFileSystemOperator> addLocalFileSystemOperator)
+        public static IServiceAction<IFileSystemOperator> AddFileSystemOperatorAction(this IServiceCollection services,
+            IServiceAction<ILocalFileSystemOperator> localFileSystemOperatorAction)
         {
-            var serviceAction = new ServiceAction<IFileSystemOperator>(() => services.AddLocalBasedFileSystemOperator(
-                addLocalFileSystemOperator));
+            var serviceAction = ServiceAction.New<IFileSystemOperator>(() => services.AddFileSystemOperator(
+                localFileSystemOperatorAction));
+
             return serviceAction;
         }
 
-        /// <summary>
-        /// Adds the <see cref="FileSystemOperator"/> implementation of <see cref="IFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
-        /// </summary>
-        public static IServiceCollection AddLocalBasedFileSystemOperator(this IServiceCollection services,
-            ServiceAction<IStringlyTypedPathOperator> addStringlyTypedPathOperator)
-        {
-            services.AddLocalBasedFileSystemOperator(
-                services.AddLocalFileSystemOperatorAction(addStringlyTypedPathOperator));
 
-            return services;
-        }
-
-        /// <summary>
-        /// Adds the <see cref="FileSystemOperator"/> implementation of <see cref="IFileSystemOperator"/> as a <see cref="ServiceLifetime.Singleton"/>.
-        /// </summary>
-        public static ServiceAction<IFileSystemOperator> AddLocalBasedFileSystemOperatorAction(this IServiceCollection services,
-            ServiceAction<IStringlyTypedPathOperator> addStringlyTypedPathOperator)
+        public static (
+            IServiceAction<ILocalFileSystemOperator> localFileSystemOperatorAction,
+            IServiceAction<IFileSystemOperator> fileSystemOperatorAction
+            )
+            AddLocalFileSystemOperatorAction(this IServiceCollection services,
+            IServiceAction<IStringlyTypedPathOperator> stringlyTypedPathOperatorAction)
         {
-            var serviceAction = new ServiceAction<IFileSystemOperator>(() => services.AddLocalBasedFileSystemOperator(
-                addStringlyTypedPathOperator));
-            return serviceAction;
+            var localFileSystemOperatorAction = services.AddLocalFileSystemOperatorOnlyAction(stringlyTypedPathOperatorAction);
+            var fileSystemOperatorAction = services.AddFileSystemOperatorAction(localFileSystemOperatorAction);
+
+            return (
+                localFileSystemOperatorAction,
+                fileSystemOperatorAction);
         }
     }
 }
