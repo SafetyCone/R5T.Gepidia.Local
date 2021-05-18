@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.Dacia.Extensions", "..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.Dacia", "..\..\R5T.Dacia\source\R5T.Dacia\R5T.Dacia.csproj", "{706774D4-8AC5-4481-AABD-C6574E0943D6}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.Gepidia.Types", "..\..\R5T.Gepidia.Types\source\R5T.Gepidia.Types\R5T.Gepidia.Types.csproj", "{A727549F-9F19-4149-8315-E63089BA1B9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -225,6 +227,18 @@ Global
 		{706774D4-8AC5-4481-AABD-C6574E0943D6}.Release|x64.Build.0 = Release|Any CPU
 		{706774D4-8AC5-4481-AABD-C6574E0943D6}.Release|x86.ActiveCfg = Release|Any CPU
 		{706774D4-8AC5-4481-AABD-C6574E0943D6}.Release|x86.Build.0 = Release|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Debug|x64.Build.0 = Debug|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Debug|x86.Build.0 = Debug|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Release|x64.ActiveCfg = Release|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Release|x64.Build.0 = Release|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Release|x86.ActiveCfg = Release|Any CPU
+		{A727549F-9F19-4149-8315-E63089BA1B9C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -242,6 +256,7 @@ Global
 		{1571C159-BD84-432A-A80A-81D4921A1DA5} = {AFEDE4A1-9859-4655-BCDF-E5319D8A8653}
 		{935265C9-C469-4B36-99B2-997CF9D633C2} = {AFEDE4A1-9859-4655-BCDF-E5319D8A8653}
 		{706774D4-8AC5-4481-AABD-C6574E0943D6} = {AFEDE4A1-9859-4655-BCDF-E5319D8A8653}
+		{A727549F-9F19-4149-8315-E63089BA1B9C} = {AFEDE4A1-9859-4655-BCDF-E5319D8A8653}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7B74D139-E45A-4297-A498-4DF03A89B559}
