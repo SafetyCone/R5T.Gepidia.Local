@@ -157,8 +157,8 @@ namespace R5T.Gepidia.Local
 
             var searchOption = SearchOptionHelper.RecursiveToSearchOption(recursive);
 
-            var subDirectoryPaths = Directory.EnumerateDirectories(directoryPath, SearchPatternHelper.All, SearchOption.AllDirectories);
-            var filePaths = Directory.EnumerateFiles(directoryPath, SearchPatternHelper.All, SearchOption.AllDirectories);
+            var subDirectoryPaths = Directory.EnumerateDirectories(directoryPath, SearchPatternHelper.All, searchOption);
+            var filePaths = Directory.EnumerateFiles(directoryPath, SearchPatternHelper.All, searchOption);
 
             var allPaths = new List<string>();
             foreach (var subDirectoryPath in subDirectoryPaths)
