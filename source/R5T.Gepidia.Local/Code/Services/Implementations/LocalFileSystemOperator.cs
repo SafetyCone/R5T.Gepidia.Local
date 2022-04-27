@@ -4,10 +4,13 @@ using System.IO;
 
 using R5T.Lombardy;
 
+using R5T.T0064;
+
 
 namespace R5T.Gepidia.Local
 {
-    public class LocalFileSystemOperator : ILocalFileSystemOperator
+    [ServiceImplementationMarker]
+    public class LocalFileSystemOperator : ILocalFileSystemOperator, IServiceImplementation
     {
         private IStringlyTypedPathOperator StringlyTypedPathOperator { get; }
 

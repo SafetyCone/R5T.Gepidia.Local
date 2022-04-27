@@ -1,9 +1,12 @@
 ﻿using System;
 
+using R5T.T0064;
+
 
 namespace R5T.Gepidia.Local
 {
-    public interface ILocalFileSystemOperator : IFileSystemOperator
+    [ServiceDefinitionMarker]
+    public interface ILocalFileSystemOperator : IFileSystemOperator, IServiceDefinition
     {
     }
 }
