@@ -13,7 +13,8 @@ namespace R5T.Gepidia.Local.Testing
     {
         #region Static
 
-        private static LocalFileSystemOperator LocalFileSystemOperator { get; } = new LocalFileSystemOperator();
+        private static LocalFileSystemOperator LocalFileSystemOperator { get; } = new LocalFileSystemOperator(
+            new Lombardy.StringlyTypedPathOperator());
         private static StringlyTypedPathOperator LocalStringlyTypedPathOperator { get; } = new StringlyTypedPathOperator();
         private static string LocalRootDirectoryPath { get; } = Utilities.GetLocalTestingRootDirectoryPath(LocalFileSystemOperatorSelfTests.LocalStringlyTypedPathOperator);
 
